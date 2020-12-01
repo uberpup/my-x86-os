@@ -56,9 +56,9 @@ struct ScreenChar {
     color_code: ColorCode,
 }
 
-/// The height of the text buffer (normally 25 lines).
+/// The height of the text buffer
 const BUFFER_HEIGHT: usize = 25;
-/// The width of the text buffer (normally 80 columns).
+/// The width of the text buffer
 const BUFFER_WIDTH: usize = 80;
 
 /// A structure representing the VGA text buffer.
