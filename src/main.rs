@@ -13,7 +13,9 @@ use my_x86_os::test_panic_handler;
 pub extern "C" fn _start() -> ! {
     println!("Hello world!");
 
-    //panic!("Scary spooky panic message");
+    my_x86_os::init();
+
+    x86_64::instructions::interrupts::int3();   // invoking breakpoint exception
 
     #[cfg(test)]
     test_main();
