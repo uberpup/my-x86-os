@@ -9,7 +9,7 @@ test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "st
 test-success-exit-code = 33 # (0x10 << 1) | 1
 
 [dependencies]
-bootloader = "0.9.11"
+bootloader = {version = "0.9.11", features = ["map_physical_memory"]}
 volatile = "0.2.6" # ain't working with version 0.4.1 anymore
 spin = "0.7.0"
 x86_64 = "0.12.3"

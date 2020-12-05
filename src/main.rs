@@ -6,11 +6,13 @@
 
 
 use core::panic::PanicInfo;
+use bootloader::{BootInfo, entry_point};
 use my_x86_os::println;
 use my_x86_os::test_panic_handler;
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
+entry_point!(kernel_main);
+
+fn kernel_main(boot_info: &'static BootInfo) -> ! {
     println!("Hello world!");
 
     my_x86_os::init();
