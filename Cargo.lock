@@ -39,12 +39,19 @@ version = "0.1.0"
 dependencies = [
  "bootloader",
  "lazy_static",
+ "pc-keyboard",
  "pic8259_simple",
  "spin 0.7.0",
  "uart_16550",
  "volatile",
  "x86_64",
 ]
+
+[[package]]
+name = "pc-keyboard"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7eb2f0a24894855829e347fcbbbac8cd58ca36ec753574e7bcc9241dc7cda115"
 
 [[package]]
 name = "pic8259_simple"

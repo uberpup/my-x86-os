@@ -44,6 +44,12 @@ pub fn exit_qemu(exit_code: QemuEC) {
     }
 }
 
+pub fn hlt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
+}
+
 pub fn test_runner(tests: &[&dyn Testable]) {
     serial_println!("Running {} tests", tests.len());
     // println!("Running {} tests", tests.len());
@@ -57,7 +63,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("[failed]\n");
     serial_println!("Error: {}\n", info);
     exit_qemu(QemuEC::Failed);
-    loop {}
+    hlt_loop();
 }
 
 // Entry point for `cargo test`
@@ -66,7 +72,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
 pub extern "C" fn _start() -> ! {
     init(); // new
     test_main();
-    loop {}
+    hlt_loop();
 }
 
 #[cfg(test)]
@@ -79,5 +85,5 @@ pub fn init() {
     gdt::init();
     interrupts::init_idt();
     unsafe { interrupts::PICS.lock().initialize(); }
-    x86_64::instructions::interrupts::enable();
+    x86_64::instructions::interrupts::enable_and_hlt(); // used to be enable()
 }
