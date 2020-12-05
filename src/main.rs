@@ -21,6 +21,9 @@ pub extern "C" fn _start() -> ! {
         *(0xdeadbeef as *mut u64) = 1337;   // invoking double-fault
     }*/
 
+    let deadbeef_ptr = 0xdeadbeef as *mut u32;
+    unsafe { *deadbeef_ptr = 42; }  // invoking page fault through illegal memory access
+
     #[cfg(test)]
     test_main();
 
