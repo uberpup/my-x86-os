@@ -10,11 +10,13 @@ use bootloader::{BootInfo, entry_point};
 use my_x86_os::println;
 use my_x86_os::test_panic_handler;
 use x86_64::VirtAddr;
-use my_x86_os::memory::active_level_4_table;
+use my_x86_os::memory;
 
 entry_point!(kernel_main);
 
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
+    use my_x86_os::memory;
+    use x86_64::{structures::paging::MapperAllSizes, VirtAddr};
     println!("Hello world!");
 
     my_x86_os::init();
@@ -30,13 +32,18 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     */
 
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
-    let lev4_table = unsafe {
-        active_level_4_table(phys_mem_offset) };
+    let mapper = unsafe { memory::init(phys_mem_offset)};
+    let addresses = [
+        0xb8000, // the identity-mapped vga buffer page
+        0x201008, // some code page
+        0x0100_0020_1a10, // some stack page
+        boot_info.physical_memory_offset, // virtual address mapped to physical 0
+    ];
 
-    for (i, entry) in lev4_table.iter().enumerate() {
-        if !entry.is_unused() {
-            println!("Level4 table entry {}: {:?}", i, entry);
-        }
+    for &address in &addresses {
+        let virt = VirtAddr::new(address);
+        let phys = mapper.translate_addr(virt) ;
+        println!("{:?} -> {:?}", virt, phys);
     }
 
     #[cfg(test)]
