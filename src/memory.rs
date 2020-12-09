@@ -1,13 +1,35 @@
 use x86_64::{
     structures::paging::PageTable,
     structures::paging::OffsetPageTable,
+    structures::paging::{Page, PhysFrame, Mapper, Size2MiB, FrameAllocator},
     VirtAddr,
     PhysAddr
 };
 
+pub struct EmptyFrameAllocator;
+
+unsafe impl FrameAllocator<Size2MiB> for EmptyFrameAllocator {
+    fn allocate_frame(&mut self) -> Option<PhysFrame<Size2MiB>> {
+        return None;
+    }
+}
+
 pub unsafe fn init(phys_mem_offset: VirtAddr) -> OffsetPageTable<'static> {
     let level_4_table = active_level_4_table(phys_mem_offset);
     return OffsetPageTable::new(level_4_table, phys_mem_offset);
+}
+
+pub fn create_example_mapping(page: Page, mapper: &mut OffsetPageTable,
+                              frame_allocator: &mut impl FrameAllocator<Size2MiB>) {
+    use x86_64::structures::paging::PageTableFlags;
+
+    let frame = PhysFrame::containing_address(PhysAddr::new(0xb8000));
+    let flags = PageTableFlags::PRESENT | PageTableFlags::WRITABLE;
+    let map_to_result = unsafe {
+        // FIXME not safe. only for testing
+        mapper.map_to(page, frame, flags, frame_allocator);
+    };
+    return map_to_result.expect("map_to_failed").flush();
 }
 
 // Returns a mutable reference to the active level 4 table.
