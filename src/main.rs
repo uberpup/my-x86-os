@@ -18,6 +18,7 @@ entry_point!(kernel_main);
 
 fn kernel_main(boot_info: &'static BootInfo) -> ! {
     use my_x86_os::memory;
+    use my_x86_os::allocator;
     use x86_64::{structures::paging::{Page, MapperAllSizes}, VirtAddr};
     println!("Hello world!");
 
@@ -57,6 +58,7 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     let page_ptr: *mut u64 = page.start_address().as_mut_ptr();
     unsafe { page_ptr.offset(400).write_volatile(0x_f021_f077_f065_f04)};
 
+    allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
     let x = Box::new(42);
 
     #[cfg(test)]
