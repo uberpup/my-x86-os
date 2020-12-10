@@ -12,7 +12,7 @@ use my_x86_os::println;
 use my_x86_os::test_panic_handler;
 use x86_64::VirtAddr;
 use my_x86_os::memory;
-use alloc::boxed::Box;
+use alloc::{boxed::Box, vec, vec::Vec};
 
 entry_point!(kernel_main);
 
@@ -60,6 +60,13 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
 
     allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
     let x = Box::new(42);
+    println!("heap_value at {:p}", x);
+
+    let mut vec = Vec::new();
+    for i in 0..10 {
+        vec.push(i);
+    }
+    println!("vec at {:p}", vec.as_slice());
 
     #[cfg(test)]
     test_main();

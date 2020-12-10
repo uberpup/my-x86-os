@@ -5,11 +5,12 @@ use x86_64::{
         mapper::MapToError, FrameAllocator, Mapper, Page, PageTableFlags, Size4KiB, Size2MiB},
     VirtAddr
 };
+use linked_list_allocator::LockedHeap;
 
 pub struct Dummy;
 
 #[global_allocator]
-static ALLOCATOR: Dummy = Dummy;
+static ALLOCATOR: LockedHeap = LockedHeap::empty();
 
 pub const HEAP_START_ADDR: usize = 0x4444_4444_0000;
 pub const HEAP_SIZE: usize = 100 * 1024;
@@ -45,5 +46,8 @@ pub fn init_heap(
         };
     }
 
+    unsafe {
+        ALLOCATOR.lock().init(HEAP_START_ADDR, HEAP_SIZE);
+    }
     return Ok(())
 }
