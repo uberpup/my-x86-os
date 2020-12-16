@@ -131,16 +131,19 @@ impl Writer {
     /// Shifts lines except last one line down
     fn prev_line(&mut self) {
         self.clear_row(BUFFER_HEIGHT - 1);
-        let mut row = BUFFER_HEIGHT - 3;
+        let mut row = BUFFER_HEIGHT - 2;
         while row >= 0 {
             self.clear_row(row+1);
             for col in 0..BUFFER_WIDTH {
                 let character = self.buffer.chars[row][col].read();
                 self.buffer.chars[row + 1][col].write(character);
             }
-            row -= 1;
+            if row > 0 {
+                row -= 1;
+            } else {
+                break;
+            }
         }
-        //self.clear_row(BUFFER_HEIGHT - 1);
         self.column_position = 0;
     }
 
