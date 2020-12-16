@@ -51,7 +51,7 @@ extern "x86-interrupt" fn page_fault_handler(stack_frame: &mut InterruptStackFra
 }
 
 extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: &mut InterruptStackFrame) {
-    print!(".");
+    // print!(".");
     unsafe { PICS.lock().notify_end_of_interrupt(InterruptIndex::Timer.as_u8()); }
 }
 
@@ -67,6 +67,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: &mut Interrup
 
     let mut keyboard = KEYBOARD.lock();
     let mut io_port = Port::new(0x60); // IO portno
+    let ARROWUP = 0x48;
 
     let scancode: u8 = unsafe { io_port.read() };
     if let Ok(Some(key_event)) = keyboard.add_byte(scancode) {
@@ -77,7 +78,9 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: &mut Interrup
             }
         }
     }
-
+    if scancode == ARROWUP { // invoking scrolling if 'ArrowUp' pressed
+        print!("+");
+    }
     unsafe { PICS.lock().notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8()) }
 }
 

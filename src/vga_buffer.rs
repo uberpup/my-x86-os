@@ -82,6 +82,7 @@ impl Writer {
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(),
+            b'+' => self.prev_line(),   // special symbol for scrolling (why not)
             byte => {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
@@ -127,6 +128,22 @@ impl Writer {
         self.column_position = 0;
     }
 
+    /// Shifts lines except last one line down
+    fn prev_line(&mut self) {
+        self.clear_row(BUFFER_HEIGHT - 1);
+        let mut row = BUFFER_HEIGHT - 3;
+        while row >= 0 {
+            self.clear_row(row+1);
+            for col in 0..BUFFER_WIDTH {
+                let character = self.buffer.chars[row][col].read();
+                self.buffer.chars[row + 1][col].write(character);
+            }
+            row -= 1;
+        }
+        //self.clear_row(BUFFER_HEIGHT - 1);
+        self.column_position = 0;
+    }
+
     /// Clears a row by overwriting it with blank characters.
     fn clear_row(&mut self, row: usize) {
         let blank = ScreenChar {
@@ -135,6 +152,14 @@ impl Writer {
         };
         for col in 0..BUFFER_WIDTH {
             self.buffer.chars[row][col].write(blank);
+        }
+    }
+    /// Clears screen the same way
+    fn clear_screen(&mut self) {
+        for row in 0..BUFFER_HEIGHT - 1 {
+            for col in 0..BUFFER_WIDTH {
+                self.clear_row(row);
+            }
         }
     }
 }
