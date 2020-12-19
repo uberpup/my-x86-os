@@ -128,12 +128,12 @@ impl Writer {
         self.column_position = 0;
     }
 
-    /// Shifts lines except last one line down
+    /// Shifts lines except last one down
     fn prev_line(&mut self) {
         self.clear_row(BUFFER_HEIGHT - 1);
         let mut row = BUFFER_HEIGHT - 2;
         while row >= 0 {
-            self.clear_row(row+1);
+            self.clear_row(row + 1);
             for col in 0..BUFFER_WIDTH {
                 let character = self.buffer.chars[row][col].read();
                 self.buffer.chars[row + 1][col].write(character);

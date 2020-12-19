@@ -15,6 +15,7 @@ pub mod interrupts;
 pub mod gdt;
 pub mod memory;
 pub mod allocator;
+pub mod acpi;
 
 extern crate alloc;
 
@@ -99,6 +100,7 @@ fn panic(info: &PanicInfo) -> ! {
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
+    // acpi::validate();
     unsafe { interrupts::PICS.lock().initialize(); }
-    x86_64::instructions::interrupts::enable_and_hlt(); // used to be enable()
+    x86_64::instructions::interrupts::enable_and_hlt();
 }
