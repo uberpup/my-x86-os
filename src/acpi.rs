@@ -1,4 +1,4 @@
-use acpi::AcpiTables;
+use acpi::{AcpiTables, AcpiHandler};
 use bootloader::BootInfo;
 use memcmp::Memcmp;
 
@@ -15,6 +15,15 @@ pub unsafe fn validate(start: *const usize) {
 
 fn acpi_handler() {
     //TODO
+}
+
+impl AcpiHandler {
+    /*pub unsafe fn map_physical_region<T>(
+        &self,
+        physical_address: usize,
+        size: usize
+    ) -> PhysicalMapping<Self, T>*/
+    /*pub fn unmap_physical_region<T>(&self, region: &PhysicalMapping<Self, T>)*/
 }
 
 unsafe fn find_rsdp(start : *const usize, len : usize) -> usize {
