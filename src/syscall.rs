@@ -1,8 +1,11 @@
+use trap_frame;
 
 pub fn syscall(usize: SyscallNumber) -> Result<i32> {
     let mut ret: i32;
     ret = 0;
     unsafe {
+        trap_frame();
+
         asm!(
         "syscall",
         in("rax") SyscallNumber,
@@ -13,6 +16,9 @@ pub fn syscall(usize: SyscallNumber) -> Result<i32> {
         out("r11") _,
         lateout("rax") ret,
         );
+
+        release_frame();
+
         if ret == -1 {
             return Err;
         } else {
@@ -25,6 +31,8 @@ pub fn sleep(time: usize) -> usize {
     let mut ret: i32;
     ret = 0;
     unsafe {
+        trap_frame();
+
         asm!(
         "syscall",
         in("rax") 35,
@@ -35,6 +43,8 @@ pub fn sleep(time: usize) -> usize {
         out("r11") _,
         lateout("rax") ret,
         );
+
+        release_frame();
     }
     if ret == -1 {
         panic!("sleep failed");
@@ -47,6 +57,8 @@ pub fn mmap(addr: *const usize, len: usize) -> usize {
     let mut ret: i32;
     ret = 0;
     unsafe {
+        trap_frame();
+
         asm!(
         "syscall",
         in("rax") 0x09,
@@ -57,6 +69,9 @@ pub fn mmap(addr: *const usize, len: usize) -> usize {
         out("r11") _,
         lateout("rax") ret,
         );
+
+        release_frame();
+
         if ret == -1 {
             return Err;
         } else {
