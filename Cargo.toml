@@ -18,6 +18,7 @@ pic8259_simple = "0.2.0"
 pc-keyboard = "0.4.1"
 linked_list_allocator = "0.8.5"
 acpi = "2.1.0"
+memcmp = "0.0.6"
 
 [dependencies.lazy_static]
 version = "1.0"

@@ -84,6 +84,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "memcmp"
+version = "0.0.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a1b44fee357b6a05a9e22554ded6c1bbe57844b58190295257ac0ad4c5944e1"
+
+[[package]]
 name = "my-x86-os"
 version = "0.1.0"
 dependencies = [
@@ -91,6 +97,7 @@ dependencies = [
  "bootloader",
  "lazy_static",
  "linked_list_allocator",
+ "memcmp",
  "pc-keyboard",
  "pic8259_simple",
  "spin 0.7.0",

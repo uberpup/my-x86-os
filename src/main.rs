@@ -46,6 +46,8 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
         boot_info.physical_memory_offset, // virtual address mapped to physical 0
     ];
 
+    // acpi.validate(/*args*/);
+
     for &address in &addresses {
         let virt = VirtAddr::new(address);
         let phys = mapper.translate_addr(virt) ;

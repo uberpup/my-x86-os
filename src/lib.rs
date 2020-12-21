@@ -27,10 +27,8 @@ pub trait Testable {
 impl<T> Testable for T where T : Fn(), {
     fn run(&self) {
         serial_print!("{}...\t", core::any::type_name::<T>());
-        // print!("{}... ", core::any::type_name::<T>());
         self();
         serial_println!("[ok]");
-        // println!("[ok!]");
     }
 }
 
@@ -58,7 +56,6 @@ pub fn hlt_loop() -> ! {
 
 pub fn test_runner(tests: &[&dyn Testable]) {
     serial_println!("Running {} tests", tests.len());
-    // println!("Running {} tests", tests.len());
     for test in tests {
         test.run();
     }
@@ -100,7 +97,6 @@ fn panic(info: &PanicInfo) -> ! {
 pub fn init() {
     gdt::init();
     interrupts::init_idt();
-    // acpi::validate();
     unsafe { interrupts::PICS.lock().initialize(); }
     x86_64::instructions::interrupts::enable_and_hlt();
 }

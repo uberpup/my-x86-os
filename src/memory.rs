@@ -17,7 +17,7 @@ pub struct BootInfoFrameAllocator {
 unsafe impl FrameAllocator<Size4KiB> for EmptyFrameAllocator {
     fn allocate_frame(&mut self) -> Option<PhysFrame<Size4KiB>> {
         return None;
-    }   // FIXME
+    }
 }
 
 impl BootInfoFrameAllocator {
@@ -52,7 +52,7 @@ pub unsafe fn init(phys_mem_offset: VirtAddr) -> OffsetPageTable<'static> {
 }
 
 pub fn create_example_mapping(page: Page, mapper: &mut OffsetPageTable,
-                              frame_allocator: &mut impl FrameAllocator<Size4KiB>) {    // FIXME transition to 2MiB pages; Check https://github.com/phil-opp/blog_os/issues/852
+                              frame_allocator: &mut impl FrameAllocator<Size4KiB>) {
     use x86_64::structures::paging::PageTableFlags;
 
     let frame = PhysFrame::containing_address(PhysAddr::new(0xb8000));
