@@ -1,0 +1,25 @@
+[package]
+name = "my-x86-os"
+version = "0.1.0"
+authors = ["vladimir <to4ilin.v@yandex.ru>"]
+edition = "2018"
+
+[package.metadata.bootimage]
+test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio"]
+test-success-exit-code = 33 # (0x10 << 1) | 1
+
+[dependencies]
+bootloader = {version = "0.9.11", features = ["map_physical_memory"]}
+volatile = "0.2.6" # ain't working with version 0.4.1 anymore
+spin = "0.7.0"
+x86_64 = "0.12.3"
+uart_16550 = "0.2.10"
+pic8259_simple = "0.2.0"
+pc-keyboard = "0.4.1"
+linked_list_allocator = "0.8.5"
+acpi = "2.1.0"
+memcmp = "0.0.6"
+
+[dependencies.lazy_static]
+version = "1.0"
+features = ["spin_no_std"]
