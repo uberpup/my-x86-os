@@ -1,3 +1,4 @@
+// should be macro obv
 pub unsafe fn trap_frame() {
     asm!(
     "push rax",
@@ -13,6 +14,7 @@ pub unsafe fn trap_frame() {
     );
 }
 
+//should be macro obv
 pub unsafe fn release_frame() {
     asm!(
     "pop r11",
