@@ -42,10 +42,25 @@ pub fn sleep(time: usize) -> usize {
     return usize(ret);
 }
 
-pub fn mmap(/*args*/) -> usize {
-    let res = syscall(0x09);
-    let res = match res {
-        Ok(res) => usize(res),
-        Err(res) => panic!("mmap failed")
-    };
+pub fn mmap(addr: *const usize, len: usize) -> usize {
+    // let res = syscall(0x09);
+    let mut ret: i32;
+    ret = 0;
+    unsafe {
+        asm!(
+        "syscall",
+        in("rax") 0x09,
+        in("rdi") addr,
+        in("rsi") len,
+        in("rdx") _,
+        out("rcs") _,
+        out("r11") _,
+        lateout("rax") ret,
+        );
+        if ret == -1 {
+            return Err;
+        } else {
+            return Ok(ret);
+        }
+    }
 }
